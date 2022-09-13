@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CardStorageService.Data\CardStorageService.Data.csproj" />
+  </ItemGroup>
+
 </Project>

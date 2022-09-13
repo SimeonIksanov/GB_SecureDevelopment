@@ -7,7 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="NLog.Web.AspNetCore" Version="5.1.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CardStorageService.Data.MsSql\CardStorageService.Data.MsSql.csproj" />
   </ItemGroup>
 
 </Project>
