@@ -31,8 +31,4 @@
     <ProjectReference Include="..\CardStorageService.Data.MsSql\CardStorageService.Data.MsSql.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\Implementation\" />
-  </ItemGroup>
-
 </Project>

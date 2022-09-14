@@ -1,4 +1,6 @@
 using CardStorageService.Data;
+using CardStorageService.Services;
+using CardStorageService.Services.Implementation;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
 using NLog.Web;
@@ -46,8 +48,14 @@ public class Program
                     });
                 break;
         }
-        
 
+
+        #endregion
+
+        #region Configure repositories
+
+        builder.Services.AddScoped<IClientRepository, ClientRepository>();
+        builder.Services.AddScoped<ICardRepository, CardRepository>();
         #endregion
         // Add services to the container.
 
