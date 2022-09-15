@@ -24,7 +24,7 @@ namespace CardStorageService.Data.MsSql.Migrations
 
             modelBuilder.Entity("CardStorageService.Data.Card", b =>
                 {
-                    b.Property<Guid>("CardId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -47,7 +47,7 @@ namespace CardStorageService.Data.MsSql.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("CardId");
+                    b.HasKey("Id");
 
                     b.HasIndex("ClientId");
 
@@ -56,11 +56,11 @@ namespace CardStorageService.Data.MsSql.Migrations
 
             modelBuilder.Entity("CardStorageService.Data.Client", b =>
                 {
-                    b.Property<int>("ClientId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClientId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("FirstName")
                         .HasMaxLength(255)
@@ -74,7 +74,7 @@ namespace CardStorageService.Data.MsSql.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.HasKey("ClientId");
+                    b.HasKey("Id");
 
                     b.ToTable("Clients");
                 });
