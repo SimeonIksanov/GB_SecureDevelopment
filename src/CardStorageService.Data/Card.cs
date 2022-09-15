@@ -1,13 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Cryptography;
 
 namespace CardStorageService.Data;
 
 [Table("Cards")]
-public class Card
+public class Card : IEntity<Guid>
 {
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public Guid CardId { get; set; }
+    public Guid Id { get; set; }
 
     [ForeignKey(nameof(Client))]
     public int ClientId { get; set; }

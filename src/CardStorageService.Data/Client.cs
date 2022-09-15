@@ -1,13 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Cryptography;
 
 namespace CardStorageService.Data;
 
 [Table("Clients")]
-public class Client
+public class Client : IEntity<int>
 {
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int ClientId { get; set; }
+    public int Id { get; set; }
 
     [Column, StringLength(255)]
     public string? Surname { get; set; }
