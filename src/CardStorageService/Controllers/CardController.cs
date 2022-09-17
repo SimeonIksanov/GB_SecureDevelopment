@@ -9,17 +9,17 @@ namespace CardStorageService.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 
-public class CardController : ControllerBase
+public class CardsController : ControllerBase
 {
     #region Services
     
-    private readonly ILogger<CardController> _logger;
+    private readonly ILogger<CardsController> _logger;
     private readonly ICardRepository _cardRepository;
 
     #endregion
 
     #region Constructors
-    public CardController(ILogger<CardController> logger, ICardRepository cardRepository)
+    public CardsController(ILogger<CardsController> logger, ICardRepository cardRepository)
     {
         _logger = logger;
         _cardRepository = cardRepository;
@@ -29,7 +29,7 @@ public class CardController : ControllerBase
 
     #region Public Methods
 
-    [HttpPost("Create")]
+    [HttpPost()]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     public IActionResult Create([FromBody]CardCreateRequest request)
     {
@@ -59,7 +59,7 @@ public class CardController : ControllerBase
         }
     }
 
-    [HttpGet("get-by-client-id")]
+    [HttpGet()]
     [ProducesResponseType(typeof(GetCardsResponse), StatusCodes.Status200OK)]
     public IActionResult GetByClientId([FromQuery]int clientId)
     {

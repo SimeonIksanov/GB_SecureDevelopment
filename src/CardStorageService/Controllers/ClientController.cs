@@ -8,17 +8,17 @@ namespace CardStorageService.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ClientController : ControllerBase
+public class ClientsController : ControllerBase
 {
     #region Services
     
-    private readonly ILogger<ClientController> _logger;
+    private readonly ILogger<ClientsController> _logger;
     private readonly IClientRepository _clientRepository;
 
     #endregion
 
     #region Constructors
-    public ClientController(ILogger<ClientController> logger, IClientRepository clientRepository)
+    public ClientsController(ILogger<ClientsController> logger, IClientRepository clientRepository)
     {
         _logger = logger;
         _clientRepository = clientRepository;
@@ -28,7 +28,7 @@ public class ClientController : ControllerBase
 
     #region Public Methods
 
-    [HttpPost("create")]
+    [HttpPost()]
     [ProducesResponseType(typeof(ClientCreateResponse), StatusCodes.Status200OK)]
     public IActionResult Create([FromBody]ClientCreateRequest request)
     {
