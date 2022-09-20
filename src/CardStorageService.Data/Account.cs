@@ -18,7 +18,7 @@ public class Account : IEntity<int>
     [StringLength(100)]
     public string PasswordHash { get; set; }
 
-    public bool Locker { get; set; }
+    public bool Locked { get; set; }
 
     [StringLength(255)]
     public string FirstName { get; set; }
