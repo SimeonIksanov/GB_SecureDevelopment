@@ -2,6 +2,7 @@
 using CardStorageService.Models;
 using CardStorageService.Models.Requests;
 using CardStorageService.Utils;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -13,14 +14,15 @@ namespace CardStorageService.Services.Implementation
     public class AuthenticationService : IAuthenticationService
     {
         private readonly int _tokenLifetimeInMinutes = 15;
-        private readonly Dictionary<string, SessionInfo> _sessions = new();
         private readonly IServiceScopeFactory _serviceScopeFactory;
-
+        private readonly IMemoryCache _sessionsMemoryCache;
+        private const int memory_cache_item_lifetime_in_minutes = 2;
         internal static readonly string SecretKey = "1234567890123456";
 
-        public AuthenticationService(IServiceScopeFactory serviceScopeFactory)
+        public AuthenticationService(IServiceScopeFactory serviceScopeFactory, IMemoryCache memoryCache)
         {
             _serviceScopeFactory = serviceScopeFactory;
+            _sessionsMemoryCache = memoryCache;
         }
         
         
@@ -56,10 +58,7 @@ namespace CardStorageService.Services.Implementation
 
             SessionInfo sessionInfo = GetSessionInfo(account, session);
 
-            lock(_sessions)
-            {
-                _sessions[sessionInfo.SessionToken] = sessionInfo;
-            }
+            _sessionsMemoryCache.Set(sessionInfo.SessionToken, sessionInfo, TimeSpan.FromMinutes(memory_cache_item_lifetime_in_minutes));
             
             return new AuthenticationResponse
             {
@@ -70,13 +69,9 @@ namespace CardStorageService.Services.Implementation
 
         public SessionInfo? GetSessionInfo(string token)
         {
-            SessionInfo? sessionInfo;
-            lock (_sessions)
-            {
-                _sessions.TryGetValue(token, out sessionInfo);
-            }
+            SessionInfo? sessionInfo;            
 
-            if (sessionInfo == null)
+            if (!_sessionsMemoryCache.TryGetValue(token, out sessionInfo))
             {
                 using IServiceScope scope = _serviceScopeFactory.CreateScope();
                 CardStorageServiceDbContext dbContext = scope.ServiceProvider.GetRequiredService<CardStorageServiceDbContext>();
@@ -94,10 +89,7 @@ namespace CardStorageService.Services.Implementation
                 sessionInfo = GetSessionInfo(account, session);
                 if (sessionInfo != null)
                 {
-                    lock (_sessions)
-                    {
-                        _sessions[token] = sessionInfo;
-                    }
+                    _sessionsMemoryCache.Set(token, sessionInfo, TimeSpan.FromMinutes(memory_cache_item_lifetime_in_minutes));
                 }
             }
             return sessionInfo;
