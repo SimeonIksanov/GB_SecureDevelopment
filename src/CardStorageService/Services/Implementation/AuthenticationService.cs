@@ -4,6 +4,7 @@ using CardStorageService.Models.Requests;
 using CardStorageService.Utils;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -11,18 +12,28 @@ using System.Text;
 
 namespace CardStorageService.Services.Implementation
 {
+    public class AuthenticationServiceConfiguration
+    {
+        public string SecretKey { get; set; }
+        public int TokenLifetimeInMinutes { get; set; }
+        public int MemoryCacheItemLifetimeInMinutes { get; set; }
+    }
     public class AuthenticationService : IAuthenticationService
     {
-        private readonly int _tokenLifetimeInMinutes = 15;
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly IMemoryCache _sessionsMemoryCache;
-        private const int memory_cache_item_lifetime_in_minutes = 2;
-        internal static readonly string SecretKey = "1234567890123456";
+        private readonly int _tokenLifetimeInMinutes;
+        private readonly int _memory_cache_item_lifetime_in_minutes;
+        private readonly string _secretKey;
 
-        public AuthenticationService(IServiceScopeFactory serviceScopeFactory, IMemoryCache memoryCache)
+        public AuthenticationService(IOptions<AuthenticationServiceConfiguration> options, IServiceScopeFactory serviceScopeFactory, IMemoryCache memoryCache)
         {
             _serviceScopeFactory = serviceScopeFactory;
             _sessionsMemoryCache = memoryCache;
+            
+            _tokenLifetimeInMinutes = options.Value.TokenLifetimeInMinutes;
+            _memory_cache_item_lifetime_in_minutes = options.Value.MemoryCacheItemLifetimeInMinutes;
+            _secretKey = options.Value.SecretKey;
         }
         
         
@@ -58,7 +69,7 @@ namespace CardStorageService.Services.Implementation
 
             SessionInfo sessionInfo = GetSessionInfo(account, session);
 
-            _sessionsMemoryCache.Set(sessionInfo.SessionToken, sessionInfo, TimeSpan.FromMinutes(memory_cache_item_lifetime_in_minutes));
+            _sessionsMemoryCache.Set(sessionInfo.SessionToken, sessionInfo, TimeSpan.FromMinutes(_memory_cache_item_lifetime_in_minutes));
             
             return new AuthenticationResponse
             {
@@ -89,7 +100,7 @@ namespace CardStorageService.Services.Implementation
                 sessionInfo = GetSessionInfo(account, session);
                 if (sessionInfo != null)
                 {
-                    _sessionsMemoryCache.Set(token, sessionInfo, TimeSpan.FromMinutes(memory_cache_item_lifetime_in_minutes));
+                    _sessionsMemoryCache.Set(token, sessionInfo, TimeSpan.FromMinutes(_memory_cache_item_lifetime_in_minutes));
                 }
             }
             return sessionInfo;
@@ -122,7 +133,7 @@ namespace CardStorageService.Services.Implementation
 
         private string CreateSessionToken(Account account)
         {
-            byte[] secretCodeBytes = Encoding.UTF8.GetBytes(SecretKey);
+            byte[] secretCodeBytes = Encoding.UTF8.GetBytes(_secretKey);
 
             SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor()
             {
