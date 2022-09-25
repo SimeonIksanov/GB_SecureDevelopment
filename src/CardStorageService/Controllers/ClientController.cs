@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Http;
 using CardStorageService.Services;
 using CardStorageService.Models.Requests;
 using CardStorageService.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CardStorageService.Controllers;
 
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class ClientsController : ControllerBase
