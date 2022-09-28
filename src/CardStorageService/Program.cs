@@ -1,4 +1,5 @@
 using CardStorageService.Data;
+using CardStorageService.Mappings;
 using CardStorageService.Models.Requests;
 using CardStorageService.Models.Validators;
 using CardStorageService.Services;
@@ -103,9 +104,17 @@ public class Program
         #endregion
 
         #region Configure FluentValidators
+
         builder.Services.AddScoped<IValidator<AuthenticationRequest>, AuthenticationRequestValidator>();
         builder.Services.AddScoped<IValidator<ClientCreateRequest>, ClientCreateRequestValidator>();
         builder.Services.AddScoped<IValidator<CardCreateRequest>, CardCreateRequestValidator>();
+
+        #endregion
+
+        #region Configure Mapper
+
+        builder.Services.AddAutoMapper(typeof(MappingsProfile));
+
         #endregion
 
         builder.Services.AddMemoryCache();

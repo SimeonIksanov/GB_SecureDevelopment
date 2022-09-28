@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using FluentValidation.Results;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using AutoMapper;
 
 namespace CardStorageService.Controllers;
 
@@ -20,17 +21,20 @@ public class ClientsController : ControllerBase
     private readonly ILogger<ClientsController> _logger;
     private readonly IClientRepository _clientRepository;
     private readonly IValidator<ClientCreateRequest> _clientCreateRequestValidator;
+    private readonly IMapper _mapper;
 
     #endregion
 
     #region Constructors
     public ClientsController(ILogger<ClientsController> logger,
                              IClientRepository clientRepository,
-                             IValidator<ClientCreateRequest> clientCreateRequestValidator)
+                             IValidator<ClientCreateRequest> clientCreateRequestValidator,
+                             IMapper mapper)
     {
         _logger = logger;
         _clientRepository = clientRepository;
         _clientCreateRequestValidator = clientCreateRequestValidator;
+        _mapper = mapper;
     }
 
     #endregion
@@ -50,12 +54,7 @@ public class ClientsController : ControllerBase
 
         try
         {
-            var clientId = _clientRepository.Create(new Client
-            {
-                FirstName = request.FirstName,
-                Patronymic = request.Patronymic,
-                Surname = request.Surname,
-            });
+            var clientId = _clientRepository.Create(_mapper.Map<Client>(request));
             return Ok(new ClientCreateResponse
             {
                 ClientId = clientId
