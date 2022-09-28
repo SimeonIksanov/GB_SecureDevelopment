@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NLog.Web;
@@ -83,12 +84,18 @@ public class Program
 			options.TokenValidationParameters = new TokenValidationParameters
 			{
 				ValidateIssuerSigningKey = true,
-				IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AuthenticationService.SecretKey)),
+				IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Settings:AuthenticationService:SecretKey"])),
 				ValidateIssuer = false,
                 ValidateAudience = false,
 				ClockSkew = TimeSpan.Zero,
 			};
 		});
+
+        #endregion
+
+        #region Configure AuthenticationService
+
+        builder.Services.Configure<AuthenticationServiceConfiguration>(builder.Configuration.GetSection("Settings:AuthenticationService"));
 
         #endregion
 
