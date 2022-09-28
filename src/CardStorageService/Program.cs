@@ -1,6 +1,9 @@
 using CardStorageService.Data;
+using CardStorageService.Models.Requests;
+using CardStorageService.Models.Validators;
 using CardStorageService.Services;
 using CardStorageService.Services.Implementation;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Mvc;
@@ -97,6 +100,12 @@ public class Program
 
         builder.Services.Configure<AuthenticationServiceConfiguration>(builder.Configuration.GetSection("Settings:AuthenticationService"));
 
+        #endregion
+
+        #region Configure FluentValidators
+        builder.Services.AddScoped<IValidator<AuthenticationRequest>, AuthenticationRequestValidator>();
+        builder.Services.AddScoped<IValidator<ClientCreateRequest>, ClientCreateRequestValidator>();
+        builder.Services.AddScoped<IValidator<CardCreateRequest>, CardCreateRequestValidator>();
         #endregion
 
         builder.Services.AddMemoryCache();

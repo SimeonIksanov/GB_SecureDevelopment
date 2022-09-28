@@ -1,7 +1,11 @@
 ﻿using CardStorageService.Data;
 using CardStorageService.Models;
 using CardStorageService.Models.Requests;
+using CardStorageService.Models.Validators;
 using CardStorageService.Services;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,14 +20,16 @@ public class CardsController : ControllerBase
     
     private readonly ILogger<CardsController> _logger;
     private readonly ICardRepository _cardRepository;
+    private readonly IValidator<CardCreateRequest> _cardCreateRequestValidator;
 
     #endregion
 
     #region Constructors
-    public CardsController(ILogger<CardsController> logger, ICardRepository cardRepository)
+    public CardsController(ILogger<CardsController> logger, ICardRepository cardRepository, IValidator<CardCreateRequest> cardCreateRequestValidator)
     {
         _logger = logger;
         _cardRepository = cardRepository;
+        _cardCreateRequestValidator = cardCreateRequestValidator;
     }
 
     #endregion
@@ -34,6 +40,13 @@ public class CardsController : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     public IActionResult Create([FromBody]CardCreateRequest request)
     {
+        ValidationResult validationResult = _cardCreateRequestValidator.Validate(request);
+        if (!validationResult.IsValid)
+        {
+            validationResult.AddToModelState(ModelState);
+            return BadRequest(ModelState);
+        }
+
         try
         {
             var cardid = _cardRepository.Create(new Card
