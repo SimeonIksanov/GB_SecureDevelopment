@@ -1,6 +1,9 @@
 ﻿using CardStorageService.Models;
 using CardStorageService.Models.Requests;
 using CardStorageService.Services;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,11 +18,14 @@ namespace CardStorageService.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly IAuthenticationService _authenticationService;
+        private readonly IValidator<AuthenticationRequest> _authenticationRequestValidator;
 
         #region Constructors
-        public AuthenticationController(IAuthenticationService authenticationService)
+        public AuthenticationController(IAuthenticationService authenticationService,
+                                        IValidator<AuthenticationRequest> authenticationRequestValidator)
         {
             _authenticationService = authenticationService;
+            _authenticationRequestValidator = authenticationRequestValidator;
         }
 
         #endregion
@@ -28,6 +34,13 @@ namespace CardStorageService.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] AuthenticationRequest authenticationRequest)
         {
+            ValidationResult validationResult = _authenticationRequestValidator.Validate(authenticationRequest);
+            if (!validationResult.IsValid)
+            {
+                validationResult.AddToModelState(ModelState);
+                return BadRequest(ModelState);
+            }
+
             AuthenticationResponse authenticationResponse = _authenticationService.Login(authenticationRequest);
             if (authenticationResponse.Status == Models.AuthenticationStatus.Success)
             {
