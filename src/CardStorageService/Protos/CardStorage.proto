@@ -12,6 +12,21 @@ service ClientService
 service CardService
 {
 	rpc GetByClientId (GetByClientIdRequest) returns (GetByClientIdResponse);
+	rpc Create (CardCreateRequest) returns (CardCreateResponse);
+}
+
+message CardCreateRequest
+{
+	int32 ClientId = 1;
+	string CardNo = 2;
+	string Name = 3;
+	string CVV2 = 4;
+	string ExpireDate = 5;
+}
+
+message CardCreateResponse
+{
+	string CardId = 1;
 }
 
 message ClientCreateRequest

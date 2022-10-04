@@ -16,7 +16,7 @@ public class CardService : CardServiceBase
 
     private readonly ILogger<CardsController> _logger;
     private readonly ICardRepository _cardRepository;
-    private readonly IValidator<CardCreateRequest> _cardCreateRequestValidator;
+    private readonly IValidator<Models.Requests.CardCreateRequest> _cardCreateRequestValidator;
     private readonly IMapper _mapper;
 
     #endregion
@@ -24,7 +24,7 @@ public class CardService : CardServiceBase
     #region Constructors
     public CardService(ILogger<CardsController> logger,
                        ICardRepository cardRepository,
-                       IValidator<CardCreateRequest> cardCreateRequestValidator,
+                       IValidator<Models.Requests.CardCreateRequest> cardCreateRequestValidator,
                        IMapper mapper)
     {
         _logger = logger;
@@ -35,6 +35,13 @@ public class CardService : CardServiceBase
 
     #endregion
 
+
+    public override Task<CardStorageServiceProtos.CardCreateResponse> Create(CardStorageServiceProtos.CardCreateRequest request, ServerCallContext context)
+    {
+        var cardId = _cardRepository.Create(_mapper.Map<Data.Card>(request));
+        var response = new CardStorageServiceProtos.CardCreateResponse { CardId = cardId.ToString() };
+        return Task.FromResult(response);
+    }
 
     public override Task<GetByClientIdResponse> GetByClientId(GetByClientIdRequest request, ServerCallContext context)
     {
