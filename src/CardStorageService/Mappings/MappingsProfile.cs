@@ -12,5 +12,7 @@ public class MappingsProfile : Profile
         CreateMap<CardCreateRequest, Card>();
         CreateMap<Card, CardDto>();
         CreateMap<ClientCreateRequest, Client>();
+        CreateMap<Card, CardStorageServiceProtos.Card>();
+        CreateMap<CardStorageServiceProtos.CardCreateRequest, Card>();
     }
 }
