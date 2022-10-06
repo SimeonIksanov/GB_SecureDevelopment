@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JwtSample", "src\JwtSample\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataProtector", "src\DataProtector\DataProtector.csproj", "{368CFA66-E7ED-45E7-8C13-04DA4BF44C9C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardStorageGrpcClient", "src\CardStorageGrpcClient\CardStorageGrpcClient.csproj", "{A3DB4643-7715-44B8-9224-5D965D09EC95}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CardStorageGrpcClient", "src\CardStorageGrpcClient\CardStorageGrpcClient.csproj", "{A3DB4643-7715-44B8-9224-5D965D09EC95}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FullTextSearchSamples", "src\FullTextSearchSamples\FullTextSearchSamples.csproj", "{A560FF4E-6260-4896-9C90-E1B5201A5669}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{A3DB4643-7715-44B8-9224-5D965D09EC95}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3DB4643-7715-44B8-9224-5D965D09EC95}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A3DB4643-7715-44B8-9224-5D965D09EC95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A560FF4E-6260-4896-9C90-E1B5201A5669}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A560FF4E-6260-4896-9C90-E1B5201A5669}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A560FF4E-6260-4896-9C90-E1B5201A5669}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A560FF4E-6260-4896-9C90-E1B5201A5669}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
